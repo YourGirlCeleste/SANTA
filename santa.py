@@ -17,7 +17,7 @@ class SANTA():
         self.user_exceptions_list = []
         self.av_exceptions_list = []
         self.backup_exceptions_list = []
-        self.headers = ['Hostname', 'Last User', 'AV Status', 'Backup Status', '', 'User Exceptions', 'AV Exceptions', 'Backup Exceptions']
+        self.headers = ['Hostname', 'Last User', 'Last Online', 'AV Status', 'Backup Status', '', 'User Exceptions', 'AV Exceptions', 'Backup Exceptions']
 
     def get_devices(self):
 
@@ -42,7 +42,7 @@ class SANTA():
 
         # Get list of last logged in users
         user_list = []
-        column = self.worksheet['E']
+        column = self.worksheet['F']
 
         for cell in column:
             value = str(cell.value)
@@ -61,7 +61,7 @@ class SANTA():
 
         # List 1
         device_list = []
-        column = self.worksheet['F']
+        column = self.worksheet['G']
 
         for cell in column:
             value = str(cell.value)
@@ -71,7 +71,7 @@ class SANTA():
 
         # List 2
         anti_virus_list = []
-        column = self.worksheet['G']
+        column = self.worksheet['H']
 
         for cell in column:
             value = str(cell.value)
@@ -98,7 +98,7 @@ class SANTA():
 
         # List 1
         device_list = []
-        column = self.worksheet['H']
+        column = self.worksheet['I']
 
         for cell in column:
             value = str(cell.value)
@@ -107,7 +107,7 @@ class SANTA():
 
         # List 2
         backup_list = []
-        column = self.worksheet['I']
+        column = self.worksheet['J']
 
         for cell in column:
             value = str(cell.value)
@@ -224,12 +224,22 @@ class SANTA():
                     self.update_sheet(row, y['last_backup'], 4)
                     break
 
+    def update_last_online(self):
+
+        column = self.worksheet['C']
+        for cell in column:
+
+            value = str(cell.value)
+            value = value.split("T")[0]
+            cell.value = value
+
     def run(self):
 
-        self.worksheet.insert_cols(3)
+        self.worksheet.insert_cols(4)
 
         self.get_devices()
         self.users_update()
+        self.update_last_online()
         self.anti_virus_update()
         self.backup_update()
         self.finishing_touches()
@@ -239,7 +249,7 @@ class SANTA():
 
         # Delete Columns
         for x in range(5):
-            self.worksheet.delete_cols(5)
+            self.worksheet.delete_cols(6)
 
         # Headers
         self.worksheet.insert_rows(1)
@@ -281,13 +291,13 @@ class SANTA():
             if '.local' in x['device']:
 
                 # Capture Client
-                self.headers[2] = "Capture Client Status"
-                self.headers[6] = "Capture Client Exceptions"
+                self.headers[3] = "Capture Client Status"
+                self.headers[7] = "Capture Client Exceptions"
                 return
 
         # Webroot
-        self.headers[2] = "Webroot Status"
-        self.headers[6] = "Webroot Exceptions"
+        self.headers[3] = "Webroot Status"
+        self.headers[7] = "Webroot Exceptions"
 
 for s in sheets:
 
