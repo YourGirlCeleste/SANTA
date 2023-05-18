@@ -1,5 +1,5 @@
 import openpyxl
-from openpyxl.styles import Font, Alignment
+from openpyxl.styles import Font
 
 # Hostname, Last Seen, AV Status, Backup Status
 
@@ -59,7 +59,7 @@ class SANTA():
 
     def get_anti_virus(self):
 
-        # List 1
+        # AV Devices List
         device_list = []
         column = self.worksheet['G']
 
@@ -69,7 +69,7 @@ class SANTA():
             device_list.append(value)
 
 
-        # List 2
+        # AV Last Seen List
         anti_virus_list = []
         column = self.worksheet['H']
 
@@ -96,7 +96,7 @@ class SANTA():
 
     def get_backup(self):
 
-        # List 1
+        # Backup Devices List
         device_list = []
         column = self.worksheet['I']
 
@@ -105,7 +105,7 @@ class SANTA():
             device_list.append(value)
 
 
-        # List 2
+        # Last Backup List
         backup_list = []
         column = self.worksheet['J']
 
@@ -139,7 +139,7 @@ class SANTA():
         if value != 'None':
             self.worksheet.cell(row=row, column=column).value = value
         else:
-            self.worksheet.cell(row=row, column=column).value = ""
+            self.worksheet.cell(row=row, column=column).value = "/////////////////////////////////////////////////////////////////"
 
         workbook.save(path)
 
@@ -224,22 +224,12 @@ class SANTA():
                     self.update_sheet(row, y['last_backup'], 4)
                     break
 
-    def update_last_online(self):
-
-        column = self.worksheet['C']
-        for cell in column:
-
-            value = str(cell.value)
-            value = value.split("T")[0]
-            cell.value = value
-
     def run(self):
 
         self.worksheet.insert_cols(4)
 
         self.get_devices()
         self.users_update()
-        self.update_last_online()
         self.anti_virus_update()
         self.backup_update()
         self.finishing_touches()
@@ -258,6 +248,14 @@ class SANTA():
             cell = self.worksheet.cell(row=1, column=x+1)
             cell.value = self.headers[x]
             cell.font = Font(name="Arial", size=12, bold=True)
+
+        # Update Last Seen
+        column = self.worksheet['C']
+        for cell in column:
+
+            value = str(cell.value)
+            value = value.split("T")[0]
+            cell.value = value
 
 
         workbook.save(path)
