@@ -239,8 +239,8 @@ class SANTA():
     def finishing_touches(self):
 
         # Delete Columns
-        for x in range(7):
-            self.worksheet.delete_cols(8)
+        for x in range(8):
+            self.worksheet.delete_cols(6)
 
         # Headers
         self.worksheet.insert_rows(1)
