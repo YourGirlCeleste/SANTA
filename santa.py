@@ -42,7 +42,7 @@ class SANTA():
 
         # Get list of last logged in users
         user_list = []
-        column = self.worksheet['F']
+        column = self.worksheet['G']
 
         for cell in column:
             value = str(cell.value)
@@ -61,7 +61,7 @@ class SANTA():
 
         # AV Devices List
         device_list = []
-        column = self.worksheet['G']
+        column = self.worksheet['H']
 
         for cell in column:
             value = str(cell.value)
@@ -71,7 +71,7 @@ class SANTA():
 
         # AV Last Seen List
         anti_virus_list = []
-        column = self.worksheet['H']
+        column = self.worksheet['I']
 
         for cell in column:
             value = str(cell.value)
@@ -98,7 +98,7 @@ class SANTA():
 
         # Backup Devices List
         device_list = []
-        column = self.worksheet['I']
+        column = self.worksheet['J']
 
         for cell in column:
             value = str(cell.value)
@@ -107,7 +107,7 @@ class SANTA():
 
         # Last Backup List
         backup_list = []
-        column = self.worksheet['J']
+        column = self.worksheet['K']
 
         for cell in column:
             value = str(cell.value)
@@ -194,7 +194,7 @@ class SANTA():
                             self.av_exceptions_list.remove(i)
                             break
 
-                    self.update_sheet(row, y['last_seen'], 3)
+                    self.update_sheet(row, y['last_seen'], 4)
                     break
 
     def backup_update(self):
@@ -221,11 +221,12 @@ class SANTA():
                             self.backup_exceptions_list.remove(i)
                             break
 
-                    self.update_sheet(row, y['last_backup'], 4)
+                    self.update_sheet(row, y['last_backup'], 5)
                     break
 
     def run(self):
 
+        self.worksheet.insert_cols(4)
         self.worksheet.insert_cols(4)
 
         self.get_devices()
@@ -238,8 +239,8 @@ class SANTA():
     def finishing_touches(self):
 
         # Delete Columns
-        for x in range(5):
-            self.worksheet.delete_cols(6)
+        for x in range(7):
+            self.worksheet.delete_cols(8)
 
         # Headers
         self.worksheet.insert_rows(1)
@@ -255,6 +256,10 @@ class SANTA():
 
             value = str(cell.value)
             value = value.split("T")[0]
+
+            if value == 'None':
+                value = ''
+
             cell.value = value
 
 
@@ -266,21 +271,21 @@ class SANTA():
         row = 1
         for x in self.user_exceptions_list:
             row += 1
-            self.update_sheet(row, x, 6)
+            self.update_sheet(row, x, 7)
 
         # Antivirus Exceptions
         row = 1
         for x in self.av_exceptions_list:
             row += 1
             value = f"{x['device']} - {x['last_seen']}"
-            self.update_sheet(row, value, 7)
+            self.update_sheet(row, value, 8)
         
         # Backup Exceptions 
         row = 1
         for x in self.backup_exceptions_list:
             row += 1
             value = f"{x['device']} - {x['last_backup']}"
-            self.update_sheet(row, value, 8)
+            self.update_sheet(row, value, 9)
 
     def find_anti_virus(self, av_list):
 
